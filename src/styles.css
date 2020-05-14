@@ -1,0 +1,11 @@
+.home {
+    height:5% ;
+    width: 100%;
+  }
+
+.myBackground{
+  height:100% ;
+    width: 100%;
+  background:linear-gradient(rgba(141, 173, 241, 0.5),transparent);
+  background-color:rgb(138, 180, 236) /*this your primary color*/
+}

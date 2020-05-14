@@ -1,69 +1,74 @@
 import React, { Component } from 'react';
 import Toolbar from '@material-ui/core/Toolbar';
 import AppBar from '@material-ui/core/AppBar';
-import Paper from '@material-ui/core/Paper';
 import Typography from "@material-ui/core/es/Typography/Typography";
 import Button from '@material-ui/core/Button';
-import Dialog from '@material-ui/core/Dialog';
-import DialogTitle from '@material-ui/core/DialogTitle';
-import {TextField} from "@material-ui/core";
+//import LinearGradient from 'react-native-linear-gradient';
 import axios from 'axios';
 import QRcode from 'qrcode.react';
+import "./styles.css";
+import home from "./home.jpeg"
 
-// import logo from "./"; {/*add streetcred logo*/}
 
 axios.defaults.baseURL = 'http://localhost:3002/';
 export class App extends Component {
     state = {
-            name: "",
-            title: "",
-            org: "",
-            phone: "",
-            email: "",
-
         qr_open: false,
         qr_placeholder: "",
         invite_url: "",
+        disabled: false,
     };
 
-    onIssue = () => {
-        const bizCard = {
-            name: this.state.name, 
-            title: this.state.title,
-            org: this.state.org,
-            phone: this.state.phone,
-            email: this.state.email
-        }  
-        console.log(bizCard)
-        axios.post('/api/issue', bizCard).then((response) => {
+    componentDidMount() {
+        axios.post('/api/issue').then((response) => {
             console.log(response);
-            this.setState({invite_url: "https://web.cloud.streetcred.id/link/?c_i=" + response.data.invite_url});
+            this.setState({ invite_url: "https://web.cloud.streetcred.id/link/?c_i=" + response.data.invite_url });
         });
         this.setState({
-          qr_open: true,
-          qr_placeholder: this.state,
+            qr_open: false,
+            qr_placeholder: this.state,
         })
     }
 
+    onApplyJob = () => {
+        // const bizCard = {
+        //     Name: "Mohammed Said", 
+        //     GPA: "2.9",
+        //     Year: "2020",
+        //     Type: "bachelor",
+        // }  
+        // console.log(bizCard)
+        // axios.post('/api/definition').then((response) => {
+        //     console.log(response);
+
+        // });
+        axios.post('/api/sendVerification').then((response) => {
+            console.log(response);
+
+        });
+        this.setState({disabled:true})
+
+    }
+
+
     render() {
-       const card = this.state
-      return (
-            <div >
+
+        const card = this.state
+        return (
+
+            <div className='myBackgrounds' >
                 {/* The AppBar */}
                 <AppBar position="static">
-                    <Toolbar style={{backgroundColor: '#812bff'}}>
-                        <img style={{}}/>
-                        <Typography variant="h6"> 
-                            Streetcred API Demo
+                    <Toolbar style={{ paddingLeft: 300, backgroundColor: 'black', }}>
+                        <img style={{}} />
+                        <Typography variant="h4" color="primary">
+                            Stark Industries
                         </Typography>
-                        <div style={{flexGrow: 1}}></div>
-                        <Button href="https://www.streetcred.id" style={{color: 'white'}}>
-                            Streetcred
-                        </Button> 
+                        <div style={{ flexGrow: 1 }}></div>
                     </Toolbar>
                 </AppBar>
 
-                 {/* The Paper */}
+                {/* The Paper
                  <div style={{display: 'flex', justifyContent: 'center'}}>
                     <Paper style={{display: 'flex', maxWidth: '600px', width: '100%', margin: '40px', padding: 40}}>
                         <div style={{display: 'flex', padding: '24px 24px', flexDirection: 'column', width: '100%'}}>
@@ -121,11 +126,44 @@ export class App extends Component {
                             </Button>
                         </div>
                     </Paper>
+                </div> */}
+
+                <div >
+                    <img
+                        // style={{ flex: 1, height: undefined, width: 100 %}}
+                        className="home"
+                        src={home}
+                    />
                 </div>
-                <Dialog open={this.state.qr_open} onClose={() => this.setState({qr_open: false})}>
-                    <DialogTitle style={{width: "300px"}}>Scan this QR code</DialogTitle>
-                    <QRcode size="200" value={this.state.invite_url} style={{margin: "0 auto", padding: "10px"}} />
-                </Dialog>
+                <div style={{ paddingLeft: 300, paddingTop: 30 }}>
+                    <div style={{ marginBottom: 20 }}>
+                        <Typography variant="h4" color="black" style={{ flexGrow: 1 }}>
+                            <b>Connect to Stark Industries</b>
+                        </Typography>
+                    </div>
+
+                    <div style={{ marginBottom: 20 }}>
+
+                        <Typography variant="h6" color="textPrimary" style={{ flexGrow: 1 }}>
+                            First you need to scan the QR code with your mobile agent from your phone to form a connection with Stark Industries.
+                                </Typography>
+                        <QRcode size="200" value={this.state.invite_url} style={{ margin: "0 auto", padding: "10px" }} />
+
+                    </div>
+
+                    <div style={{ marginBottom: 20 }}>
+
+                        <Typography variant="h6" color="textPrimary" style={{ flexGrow: 1 }}>
+                            Once you have accepted the connection from your mobile agent, click the button below to receive your verification offer!
+                        </Typography>
+                        <Button disabled = {this.state.disabled} size="large" variant="contained" color="primary" onClick={() => this.onApplyJob()}>
+                            Apply for this job
+                        </Button>
+                    </div>
+
+
+
+                </div>
             </div>
         )
     }
