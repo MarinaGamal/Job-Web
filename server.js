@@ -7,6 +7,8 @@ var express = require('express');
 var ngrok = require('ngrok');
 var cache = require('./model');
 
+var policyID = "3215da83-ffab-4dc7-0ba2-08d7ed58d81b"
+
 require('dotenv').config();
 
 const { AgencyServiceClient, Credentials } = require("@streetcred.id/service-clients");
@@ -172,7 +174,6 @@ const createCertificateSchema = async () => {
     }
 }
 
-var policyID = "3215da83-ffab-4dc7-0ba2-08d7ed58d81b"
 
 const sendVerificationPolicy = async () => {
     try {
