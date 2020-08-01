@@ -7,7 +7,7 @@ var express = require('express');
 var ngrok = require('ngrok');
 var cache = require('./model');
 
-var policyID = "3215da83-ffab-4dc7-0ba2-08d7ed58d81b"
+var policyID = "c1f2b922-8aa5-4b9f-7bc7-08d82e24cbd8"
 
 require('dotenv').config();
 
@@ -40,8 +40,8 @@ app.post('/webhook', async function (req, res) {
             // }
             // await client.createCredential(params);
         }
-        else if (req.body.message_type === 'credential_request') {
-            console.log("cred request notif ");
+        else if (req.body.message_type === 'verification_request') {
+            console.log("verification acceptance notif ");
 
             //const attribs = cache.get(req.body.data.ConnectionId)
             //if (attribs) {
@@ -55,7 +55,7 @@ app.post('/webhook', async function (req, res) {
                 }
             }
 
-            await client.issueCredential(offer.credentialId, {
+            await client.verifyVerification(offer.credentialId, {
                 body: {
                     "Name": "Marina Gamal Elias",
                     "GPA": "4.0",
