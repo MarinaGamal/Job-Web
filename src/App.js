@@ -8,9 +8,10 @@ import axios from 'axios';
 import QRcode from 'qrcode.react';
 import "./styles.css";
 import home from "./home.jpeg"
+import { Checkmark } from 'react-checkmark'
 
 
-axios.defaults.baseURL = 'http://localhost:3002/';
+axios.defaults.baseURL = 'http://localhost:5004/';
 export class App extends Component {
     state = {
         qr_open: false,
@@ -66,7 +67,9 @@ export class App extends Component {
                         </Typography>
                         <div style={{ flexGrow: 1 }}></div>
                     </Toolbar>
+                
                 </AppBar>
+                
 
                 {/* The Paper
                  <div style={{display: 'flex', justifyContent: 'center'}}>
@@ -159,6 +162,7 @@ export class App extends Component {
                         <Button disabled = {this.state.disabled} size="large" variant="contained" color="primary" onClick={() => this.onApplyJob()}>
                             Apply for this job
                         </Button>
+                        <Checkmark size='xxLarge' />
                     </div>
 
 

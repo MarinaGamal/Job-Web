@@ -7,7 +7,7 @@ var express = require('express');
 var ngrok = require('ngrok');
 var cache = require('./model');
 
-var policyID = "c1f2b922-8aa5-4b9f-7bc7-08d82e24cbd8"
+var policyID = "b4b2df4d-b4d3-46f4-7bc9-08d82e24cbd8"
 
 require('dotenv').config();
 
@@ -46,25 +46,20 @@ app.post('/webhook', async function (req, res) {
             //const attribs = cache.get(req.body.data.ConnectionId)
             //if (attribs) {
             //var param_obj = JSON.parse(attribs);
-            var params = {
-                values: {
-                    "Name": "Marina Gamal Elias",
-                    "GPA": "4.0",
-                    "Year": "2020",
-                    "Type": "Bachelor Dergree"
-                }
-            }
+            // var params = {
+            //     values: {
+            //         "Name": "Marina Gamal Elias",
+            //         "GPA": "4.0",
+            //         "Year": "2020",
+            //         "Type": "Bachelor Dergree"
+            //     }
+            // }
 
-            await client.verifyVerification(offer.credentialId, {
-                body: {
-                    "Name": "Marina Gamal Elias",
-                    "GPA": "4.0",
-                    "Year": "2020",
-                    "Type": "Bachelor Dergree"
-                }
-            });
+            var res = await client.verifyVerification(cache.get("verificationID"));
+            console.log(res.valid + "Verification")
             //}
         }
+        
     }
     catch (e) {
         console.log(e.message || e.toString());
@@ -93,17 +88,18 @@ app.post('/api/issue', cors(), async function (req, res) {
 //     //res.status(200).send({ invite_url: invite.invitation });
 // }); 
 
-app.post('/api/offer', cors(), async function (req, res) {
+// app.post('/api/offer', cors(), async function (req, res) {
 
-    const offer = await createCertificateOffer();
-    cache.add("credentialId", offer.credentialId);
-    cache.add("offer", offer);
-    // res.status(200).send({ invite_url: invite.invitation });
-});
+//     const offer = await createCertificateOffer();
+//     cache.add("credentialId", offer.credentialId);
+//     cache.add("offer", offer);
+//     // res.status(200).send({ invite_url: invite.invitation });
+// });
 
 app.post('/api/sendVerification', cors(), async function (req, res) {
 
-    const offer = await sendVerificationPolicy();
+    const verification = await sendVerificationPolicy();
+    cache.add("verificationID",verification.verificationId);
     console.log("henaaaaaaaaaa")
     // res.status(200).send({ invite_url: invite.invitation });
 });
@@ -199,7 +195,7 @@ createTerminus(server, {
     onSignal
 });
 
-const PORT = process.env.PORT || 3002;
+const PORT = process.env.PORT || 5004;
 var server = server.listen(PORT, async function () {
     const url_val = await ngrok.connect(PORT);
     console.log("============= \n\n" + url_val + "\n\n =========");
