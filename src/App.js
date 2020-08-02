@@ -10,7 +10,7 @@ import "./styles.css";
 import home from "./home.jpeg"
 
 
-axios.defaults.baseURL = 'http://localhost:3002/';
+axios.defaults.baseURL = 'http://localhost:5004/';
 export class App extends Component {
     state = {
         qr_open: false,
