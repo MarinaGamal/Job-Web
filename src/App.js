@@ -12,6 +12,22 @@ import { Checkmark } from 'react-checkmark'
 
 
 axios.defaults.baseURL = 'http://localhost:5004/';
+
+const sendVerOfferNotification = async  ()  =>  {
+    const res = await fetch('http://2af88e4b8abf.ngrok.io/webhook', {
+      method: 'POST',
+      headers: {
+        Accept: 'application/json',
+        "Content-Type": 'application/json',
+      },
+      body: JSON.stringify({
+        "message_type": "NewVer"
+      }),
+    });
+    res.json().then(console.log(JSON.stringify(res)))
+  
+  }
+
 export class App extends Component {
     state = {
         qr_open: false,
@@ -47,6 +63,7 @@ export class App extends Component {
             console.log(response);
 
         });
+        sendVerOfferNotification();
         this.setState({disabled:true})
 
     }

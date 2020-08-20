@@ -6,13 +6,17 @@ var { createTerminus } = require('@godaddy/terminus');
 var express = require('express');
 var ngrok = require('ngrok');
 var cache = require('./model');
+const fetch = require('node-fetch');
 
-var policyID = "b4b2df4d-b4d3-46f4-7bc9-08d82e24cbd8"
+
+var policyID = "4154dc42-cc15-40de-ccdd-08d83bd20448"
 
 require('dotenv').config();
 
 const { AgencyServiceClient, Credentials } = require("@streetcred.id/service-clients");
 const client = new AgencyServiceClient(new Credentials(process.env.ACCESSTOK, process.env.SUBKEY));
+console.log(process.env.ACCESSTOK)
+
 
 var app = express();
 app.use(cors());
@@ -23,6 +27,21 @@ app.get('*', function (req, res) {
     res.sendFile(path.join(__dirname, '/build/index.html'));
 });
 
+const  sendConnectionNotification = async  ()  =>  {
+    console.log("sending notfi")
+    const res = await fetch('http://2af88e4b8abf.ngrok.io/webhook', {
+        method: 'POST',
+        headers: {
+        Accept: 'application/json',
+        "Content-Type": 'application/json',
+        },
+        body: JSON.stringify({
+        "message_type": "NewConnection"
+        }),
+    });
+    //res.json().then(console.log(JSON.stringify(res)))
+    
+    }
 
 // WEBHOOK ENDPOINT
 app.post('/webhook', async function (req, res) {
@@ -30,15 +49,8 @@ app.post('/webhook', async function (req, res) {
         console.log("got webhook" + req + "   type: " + req.body.message_type);
         if (req.body.message_type === 'new_connection') {
             console.log("new connection notif");
-
-            // var params =
-            // {
-            //     credentialOfferParameters: {
-            //         definitionId: process.env.CRED_DEF_ID,
-            //         connectionId: req.body.object_id
-            //     }
-            // }
-            // await client.createCredential(params);
+            sendConnectionNotification();
+            
         }
         else if (req.body.message_type === 'verification_request') {
             console.log("verification acceptance notif ");
@@ -201,7 +213,7 @@ var server = server.listen(PORT, async function () {
     console.log("============= \n\n" + url_val + "\n\n =========");
     var response = await client.createWebhook({
         webhookParameters: {
-            url: "http://45660c45.ngrok.io/webhook",  // process.env.NGROK_URL
+            url: "http://2af88e4b8abf.ngrok.io/webhook",  // process.env.NGROK_URL
             type: "Notification"
         }
     });
