@@ -12,6 +12,8 @@ const socketIo = require("socket.io");
 
 
 var policyID = "4154dc42-cc15-40de-ccdd-08d83bd20448"
+// var server = http.createServer(app);
+// const io = socketIo(server);
 
 require('dotenv').config();
 
@@ -29,11 +31,11 @@ app.get('*', function (req, res) {
     res.sendFile(path.join(__dirname, '/build/index.html'));
 });
 
-interval = setInterval(() => io.emit("verStautes",true), 2000);
+//interval = setInterval(() => io.emit("verStautes",true), 2000);
 
 const  sendConnectionNotification = async  ()  =>  {
     console.log("sending notfi")
-    const res = await fetch('http://076823331f6d.ngrok.io/webhook', {
+    const res = await fetch(process.env.ngrok+'/webhook', {
         method: 'POST',
         headers: {
         Accept: 'application/json',
@@ -54,7 +56,7 @@ app.post('/webhook', async function (req, res) {
         if (req.body.message_type === 'new_connection') {
             console.log("new connection notif");
             sendConnectionNotification();
-            interval = setInterval(() => io.emit("verStautes",true), 2000);
+           // interval = setInterval(() => io.emit("verStautes",true), 2000);
             
         }
         else if (req.body.message_type === 'verification_request') {
@@ -73,9 +75,9 @@ app.post('/webhook', async function (req, res) {
             // }
 
             var res = await client.verifyVerification(cache.get("verificationID"));
-            console.log(res.valid + "Verification")
-            interval = setInterval(() => io.emit("verStautes",true), 2000);
-            
+            console.log(res.valid + " Verification")
+            interval = setInterval(() => io.emit("verStatues",true), 2000);
+            console.log("ba3at")
             //}
         }
         
@@ -201,7 +203,8 @@ const sendVerificationPolicy = async () => {
 }
 
 // for graceful closing
-var server = http.createServer(app);
+ var server = http.createServer(app);
+// const io = socketIo(server);
 
 async function onSignal() {
     var webhookId = cache.get("webhookId");

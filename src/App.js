@@ -12,11 +12,11 @@ import { Checkmark } from 'react-checkmark';
 import socketIOClient from "socket.io-client";
 
 
-
+var ngrok = "http://8b75d5227710.ngrok.io"
 axios.defaults.baseURL = 'http://localhost:5004/';
 
 const sendVerOfferNotification = async  ()  =>  {
-    const res = await fetch('http://2af88e4b8abf.ngrok.io/webhook', {
+    const res = await fetch(ngrok +'/webhook', {
       method: 'POST',
       headers: {
         Accept: 'application/json',
@@ -36,14 +36,16 @@ export class App extends Component {
         qr_placeholder: "",
         invite_url: "",
         disabled: false,
-        chechMarkDisabled: false,
+        checkMarkDisabled: false,
     };
 
     componentDidMount() {
-        const socket = socketIOClient('http://192.168.1.114:5002/');
-        socket.on("verStautes", data => {
+        const socket = socketIOClient('http://192.168.1.3:5004/');
+        console.log(socket.connected)
+        socket.on("verStatues", data => {
             console.log("Home Client disconnected");
-            this.setState({ chechMarkDisabled:data  });
+            this.setState({ checkMarkDisabled: true  });
+            console.log(this.checkMarkDisabled)
             
           });
         axios.post('/api/issue').then((response) => {
