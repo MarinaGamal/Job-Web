@@ -8,7 +8,9 @@ import axios from 'axios';
 import QRcode from 'qrcode.react';
 import "./styles.css";
 import home from "./home.jpeg"
-import { Checkmark } from 'react-checkmark'
+import { Checkmark } from 'react-checkmark';
+import socketIOClient from "socket.io-client";
+
 
 
 axios.defaults.baseURL = 'http://localhost:5004/';
@@ -34,9 +36,16 @@ export class App extends Component {
         qr_placeholder: "",
         invite_url: "",
         disabled: false,
+        chechMarkDisabled: false,
     };
 
     componentDidMount() {
+        const socket = socketIOClient('http://192.168.1.114:5002/');
+        socket.on("verStautes", data => {
+            console.log("Home Client disconnected");
+            this.setState({ chechMarkDisabled:data  });
+            
+          });
         axios.post('/api/issue').then((response) => {
             console.log(response);
             this.setState({ invite_url: "https://web.cloud.streetcred.id/link/?c_i=" + response.data.invite_url });
@@ -179,7 +188,10 @@ export class App extends Component {
                         <Button disabled = {this.state.disabled} size="large" variant="contained" color="primary" onClick={() => this.onApplyJob()}>
                             Apply for this job
                         </Button>
-                        <Checkmark size='xxLarge' />
+                        <div>
+                        
+                        { this.state.chechMarkDisabled ? <Checkmark size='xxLarge'/> : null }
+                        </div>
                     </div>
 
 

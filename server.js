@@ -7,6 +7,8 @@ var express = require('express');
 var ngrok = require('ngrok');
 var cache = require('./model');
 const fetch = require('node-fetch');
+const socketIo = require("socket.io");
+
 
 
 var policyID = "4154dc42-cc15-40de-ccdd-08d83bd20448"
@@ -27,9 +29,11 @@ app.get('*', function (req, res) {
     res.sendFile(path.join(__dirname, '/build/index.html'));
 });
 
+interval = setInterval(() => io.emit("verStautes",true), 2000);
+
 const  sendConnectionNotification = async  ()  =>  {
     console.log("sending notfi")
-    const res = await fetch('http://2af88e4b8abf.ngrok.io/webhook', {
+    const res = await fetch('http://076823331f6d.ngrok.io/webhook', {
         method: 'POST',
         headers: {
         Accept: 'application/json',
@@ -50,6 +54,7 @@ app.post('/webhook', async function (req, res) {
         if (req.body.message_type === 'new_connection') {
             console.log("new connection notif");
             sendConnectionNotification();
+            interval = setInterval(() => io.emit("verStautes",true), 2000);
             
         }
         else if (req.body.message_type === 'verification_request') {
@@ -69,6 +74,8 @@ app.post('/webhook', async function (req, res) {
 
             var res = await client.verifyVerification(cache.get("verificationID"));
             console.log(res.valid + "Verification")
+            interval = setInterval(() => io.emit("verStautes",true), 2000);
+            
             //}
         }
         
@@ -220,4 +227,6 @@ var server = server.listen(PORT, async function () {
 
     cache.add("webhookId", response.id);
     console.log('Listening on port %d', server.address().port);
-});
+}); 
+
+const io = socketIo(server);
