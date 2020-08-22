@@ -11,13 +11,13 @@ It is aimed to complete the the "College Certificate Project on top of the Block
 
 Edit the file called ".env-template" to ".env" and add the following in it:
 
-ACCESSTOK='1EttW4CmYNfwUcv93z6Dbff54jp5i8OSg-Xt0ZCMns4'                                                                          SUBKEY='d9cce2ec9adb4741b0b85279031d614b'
+ACCESSTOK='1EttW4CmYNfwUcv93z6Dbff54jp5i8OSg-Xt0ZCMns4' <br />                                                                     SUBKEY='d9cce2ec9adb4741b0b85279031d614b'  <br />  
 
-#------------- Credential Definition ----------------- #                                                                CRED_DEF_ID='Mp2F7q7czjX3MjwMQMNLhB:3:CL:84162:Default'
+#------------- Credential Definition ----------------- #       <br />                                                            CRED_DEF_ID='Mp2F7q7czjX3MjwMQMNLhB:3:CL:84162:Default'      <br />  
 
-#------------- Sovrin Staging Schema ------------------- #                                                             SCHEMA_ID='NGZRy3B7HgE4RpBJpzjM5y:2:business-card:1.0'
+#------------- Sovrin Staging Schema ------------------- #    <br />                                                            SCHEMA_ID='NGZRy3B7HgE4RpBJpzjM5y:2:business-card:1.0'    <br />  
 
-#------------- BCovrin Schema -------------------------- #                                                                        #SCHEMA_ID='5ZtmDq3BwF7vVLcWTejb3M:2:business card:1.0'
+#------------- BCovrin Schema -------------------------- #       <br />                                                                    #SCHEMA_ID='5ZtmDq3BwF7vVLcWTejb3M:2:business card:1.0'    <br />  
 
 SKIP_PREFLIGHT_CHECK=true
 
@@ -35,5 +35,5 @@ After running the wallet project and receiveing your credential from the college
 On pressing the Apply button a verificatio offer will be sent to your mobile application, you then need to choose the right credential and present the requested values. Finally, a webhook would be received in Stark Industries to start verifying the correctness of this credential againt the ledger.
     
 ## Finally use the following 2 projects to continue the Isuuing credential and verifying it scenario.
-1- College Website:                                                                                                                      https://github.com/msaidm/Blockchain-Certificates-Authentication                                                                                                2- Student Wallet (Mobile Application)                                                                                                                https://github.com/MarinaGamal/Mobile-React-Native-Course
+1- College Website:   <br />                                                                                                                      https://github.com/msaidm/Blockchain-Certificates-Authentication  <br />                                                                                         2- Student Wallet (Mobile Application)               <br />                                                                                                    https://github.com/MarinaGamal/Mobile-React-Native-Course
 
