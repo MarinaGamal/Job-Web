@@ -11,24 +11,24 @@ import { Checkmark } from 'react-checkmark';
 import socketIOClient from "socket.io-client";
 
 
-var ngrok = "http://aca6e7afe35f.ngrok.io"
+var ngrok = "http://b42e2d162c0c.ngrok.io"
 axios.defaults.baseURL = 'http://localhost:5004/';
 let interval;
 
-const sendVerOfferNotification = async  ()  =>  {
-    const res = await fetch(ngrok +'/webhook', {
-      method: 'POST',
-      headers: {
-        Accept: 'application/json',
-        "Content-Type": 'application/json',
-      },
-      body: JSON.stringify({
-        "message_type": "NewVer"
-      }),
+const sendVerOfferNotification = async () => {
+    const res = await fetch(ngrok + '/webhook', {
+        method: 'POST',
+        headers: {
+            Accept: 'application/json',
+            "Content-Type": 'application/json',
+        },
+        body: JSON.stringify({
+            "message_type": "NewVer"
+        }),
     });
     res.json().then(console.log(JSON.stringify(res)))
-  
-  }
+
+}
 
 export class App extends Component {
     state = {
@@ -40,30 +40,30 @@ export class App extends Component {
     };
 
     componentDidMount() {
-        console.log(this.state.chechMarkDisabled+'hi')
-        const socket = socketIOClient('http://192.168.1.122:5004/');
-        let timeRun=0
+        //this.setState({ chechMarkDisabled: true })
+        console.log(this.state.chechMarkDisabled + 'hi')
+        const socket = socketIOClient('http://192.168.1.39:5004/');
+        let timeRun = 0
         interval = setInterval(() => {
 
-            timeRun+=1;
+            timeRun += 1;
             console.log(timeRun)
-            if (timeRun > 5)
-            {
+            if (timeRun > 5) {
                 clearInterval(interval)
             }
-        socket.on("hi", (data) => {
-            console.log("Home Client disconnected");
-            this.changeCheckMark();
-            console.log(this.state.checkMarkDisabled)
-            
-          });
+            socket.on("hi", (data) => {
+                console.log("Home Client disconnected");
+                this.changeCheckMark();
+                console.log(this.state.checkMarkDisabled)
+
+            });
         });
         socket.on("verStatues", data => {
             console.log("Home Client disconnected");
-            this.setState({ checkMarkDisabled: true  });
+            this.setState({ checkMarkDisabled: true });
             console.log(this.checkMarkDisabled)
-            
-          });
+
+        });
         axios.post('/api/issue').then((response) => {
             console.log(response);
             this.setState({ invite_url: "https://web.cloud.streetcred.id/link/?c_i=" + response.data.invite_url });
@@ -74,18 +74,18 @@ export class App extends Component {
         })
     }
 
-   
+
     onApplyJob = () => {
         axios.post('/api/sendVerification').then((response) => {
             console.log(response);
 
         });
         sendVerOfferNotification();
-        this.setState({disabled:true})
+        this.setState({ disabled: true })
     }
 
-    changeCheckMark=()=>{
-        this.setState({chechMarkDisabled:true})
+    changeCheckMark = () => {
+        this.setState({ chechMarkDisabled: true })
     }
 
 
@@ -104,7 +104,7 @@ export class App extends Component {
                         </Typography>
                         <div style={{ flexGrow: 1 }}></div>
                     </Toolbar>
-                
+
                 </AppBar>
                 <div >
                     <img
@@ -119,27 +119,32 @@ export class App extends Component {
                         </Typography>
                     </div>
 
-                    <div style={{ marginBottom: 20 }}>
+                    <div style={{ marginBottom: 5 }}>
 
                         <Typography variant="h6" color="textPrimary" style={{ flexGrow: 1 }}>
                             First you need to scan the QR code with your mobile agent from your phone to form a connection with Stark Industries.
                                 </Typography>
-                        <QRcode size="200" value={this.state.invite_url} style={{ margin: "0 auto", padding: "10px" }} />
+                        <div style={{flexDirection:'row', paddingTop:"20px"}}>
+                        <QRcode size="200" value={this.state.invite_url} style={{margin: "0 auto", padding: "0px" }} />
+                            <div style={{marginBottom:20}}>
+                                {this.state.chechMarkDisabled ? <Checkmark style={{margin: 2 }} size='xLarge' /> : null}
+                            </div>
+                            
+                        </div>
+
 
                     </div>
+
+
 
                     <div style={{ marginBottom: 20 }}>
 
                         <Typography variant="h6" color="textPrimary" style={{ flexGrow: 1 }}>
                             Once you have accepted the connection from your mobile agent, click the button below to receive your verification offer!
                         </Typography>
-                        <Button disabled = {this.state.disabled} size="large" variant="contained" color="primary" onClick={() => this.onApplyJob()}>
+                        <Button disabled={this.state.disabled} size="large" variant="contained" color="primary" onClick={() => this.onApplyJob()}>
                             Apply for this job
                         </Button>
-                        <div>
-                        
-                        { this.state.chechMarkDisabled ? <Checkmark size='xxLarge'/> : null }
-                        </div>
                     </div>
 
 

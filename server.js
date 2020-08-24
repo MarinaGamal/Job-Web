@@ -58,7 +58,7 @@ app.post('/webhook', async function (req, res) {
 
             var res = await client.verifyVerification(cache.get("verificationID"));
             console.log(res.valid + " Verification")
-            io.local.emit("hi",true)
+            io.local.emit("hi",res.valid)
 
           
         }
