@@ -9,7 +9,7 @@ var cache = require('./model');
 const fetch = require('node-fetch');
 const socketIo = require("socket.io");
 
-var policyID = "ea7c40c1-d36e-4dbe-cceb-08d83bd20448"
+var policyID = "0943b653-3598-428b-415a-08d847ea6518" //change to your created policy ID
 
 require('dotenv').config();
 
@@ -27,7 +27,7 @@ app.get('*', function (req, res) {
     res.sendFile(path.join(__dirname, '/build/index.html'));
 });
 
-
+//sends notification to the application that a connection is established
 const  sendConnectionNotification = async  ()  =>  {
     console.log("sending notfi")
     const res = await fetch(process.env.ngrok+'/webhook', {
@@ -48,14 +48,13 @@ app.post('/webhook', async function (req, res) {
     try {
         console.log("got webhook" + req + "   type: " + req.body.message_type);
         if (req.body.message_type === 'new_connection') {
-            console.log("new connection notif");
+            console.log("new connection notif"); //sends notification upon connection
             sendConnectionNotification();           
 
             
         }
-        else if (req.body.message_type === 'verification_request') {
+        else if (req.body.message_type === 'verification_request') { //upon receiving the values from the application verify against the ledger
             console.log("verification acceptance notif ");
-
             var res = await client.verifyVerification(cache.get("verificationID"));
             console.log(res.valid + " Verification")
             io.local.emit("hi",res.valid)
@@ -71,14 +70,14 @@ app.post('/webhook', async function (req, res) {
 
 //FRONTEND ENDPOINT
 app.post('/api/issue', cors(), async function (req, res) {
-    const invite = await getInvite();
+    const invite = await getInvite(); //get invitation url
     const attribs = JSON.stringify(req.body);
     cache.add("connectionId", invite.connectionId);
     res.status(200).send({ invite_url: invite.invitation });
 });
 
 
-app.post('/api/sendVerification', cors(), async function (req, res) {
+app.post('/api/sendVerification', cors(), async function (req, res) { //sends verification policy to the application
 
     const verification = await sendVerificationPolicy();
     cache.add("verificationID",verification.verificationId);
@@ -96,7 +95,7 @@ const getInvite = async () => {
 }
 
 
-const sendVerificationPolicy = async () => {
+const sendVerificationPolicy = async () => { 
     try {
         var result = await client.sendVerificationFromPolicy(cache.get("connectionId"), policyID);
         console.log(result)

@@ -11,10 +11,11 @@ import { Checkmark } from 'react-checkmark';
 import socketIOClient from "socket.io-client";
 
 
-var ngrok = "http://b42e2d162c0c.ngrok.io"
+var ngrok = "http://07c766e1c53b.ngrok.io"  //public url to connect to the application
 axios.defaults.baseURL = 'http://localhost:5004/';
 let interval;
 
+//sends the verification offer notification to te application using webhooks
 const sendVerOfferNotification = async () => {
     const res = await fetch(ngrok + '/webhook', {
         method: 'POST',
@@ -42,7 +43,8 @@ export class App extends Component {
     componentDidMount() {
         //this.setState({ chechMarkDisabled: true })
         console.log(this.state.chechMarkDisabled + 'hi')
-        const socket = socketIOClient('http://192.168.1.39:5004/');
+        //creatin a socket to communicate with the server
+        const socket = socketIOClient('http://192.168.1.3:5004/'); //change to your IP address
         let timeRun = 0
         interval = setInterval(() => {
 
@@ -51,6 +53,7 @@ export class App extends Component {
             if (timeRun > 5) {
                 clearInterval(interval)
             }
+            //upon receiving a signal that the data is valid or not set checkmark to the received data
             socket.on("hi", (data) => {
                 console.log("Home Client disconnected");
                 this.changeCheckMark();
@@ -58,12 +61,15 @@ export class App extends Component {
 
             });
         });
+
         socket.on("verStatues", data => {
             console.log("Home Client disconnected");
             this.setState({ checkMarkDisabled: true });
             console.log(this.checkMarkDisabled)
 
         });
+
+        
         axios.post('/api/issue').then((response) => {
             console.log(response);
             this.setState({ invite_url: "https://web.cloud.streetcred.id/link/?c_i=" + response.data.invite_url });
@@ -74,7 +80,7 @@ export class App extends Component {
         })
     }
 
-
+    //upon pressing apply job calls the send verification in server
     onApplyJob = () => {
         axios.post('/api/sendVerification').then((response) => {
             console.log(response);
@@ -89,7 +95,7 @@ export class App extends Component {
     }
 
 
-
+    //the UI of the Job website
     render() {
 
         const card = this.state
